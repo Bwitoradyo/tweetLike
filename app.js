@@ -1,18 +1,33 @@
-let express = require('express');
-let path = require('path');
-let favicon = require('serve-favicon')
-let logger = require('morgan');
-let cookieParser = require('cookie-parser');
-let bodyParser = require('body-parser');
+var express = require('express');
+var path = require('path');
+var favicon = require('serve-favicon')
+var logger = require('morgan');
+var cookieParser = require('cookie-parser');
+var bodyParser = require('body-parser');
 
-let routes = require('./server/routes/index');
-let users = require('./server/routes/users');
+var routes = require('./server/routes/index');
+var users = require('./server/routes/users');
 
-let app = express();
+var app = express();
+
+//ODM With Mongoose
+var mongoose = require('mongoose');
+//Modules to store session
+var session = require ('express-session');
+var MongoStore = require ('connect-mongo')(session);
+//Import Passport and Warning flash modules
+var passport = require ('passport');
+var flash = require ('connect-flash');
 
 // view engine setup
 app.set('views', path.join(__dirname, './server/views/pages'));
 app.set('view engine', 'ejs');
+
+//Database configuration
+var config = require('./server/config/config.js');
+//Connect to our database
+mongoose.connect(config.url);
+
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'new-google-favicon-512.png')));

@@ -3,6 +3,9 @@
 //======================================================================================
 let express = require('express');
 let router = express.Router();
+let passport = require ('passport');
+// get gravatar icon from email ========================================================
+let gravatar = require('gravatar')
 
 //======================================================================================
 // GET home page. ======================================================================
@@ -15,43 +18,32 @@ router.get('/',(req, res, next) => {
 // GET login page. =====================================================================
 //======================================================================================
 router.get('/login', (req, res, next) => {
-  res.render('login', {
-    title:"Login Page",
-    message: req.flash('loginMessage')
-  });
+  res.render('login', {title:"Login Page", message: req.flash('loginMessage')});
 });
-
 
 //======================================================================================
 // POST login page. ====================================================================
 //======================================================================================
-router.post('/signup', passport.authenticate('local-signup',{
-//Success go to Profile Page, Fail go to Signup Page====================================
+router.post('/login', passport.authenticate('local-login',{
+//Success go to Profile Page, Fail go to Sign up Page====================================
     successRedirect :'/profile',
     failureRedirect :'/signup',
     failureFlash : true
 }));
 
 
-
 //======================================================================================
-// GET Signup page. ====================================================================
+// GET Sign up page. ===================================================================
 //======================================================================================
 router.get('/signup', (req, res) => {
-   res.render('signup',
-       {
-       title:"Signup Page",
-       message: req.flash('signupMessage')
-       }
-   )
+   res.render('signup', {title:"Signup Page", message: req.flash('signupMessage') });
 });
 
 //======================================================================================
-// POST Signup =========================================================================
+// POST Sign up ========================================================================
 //======================================================================================
-
 router.post('/signup', passport.authenticate('local-signup', {
-// Go to Profile page if success =======================================================
+// Go to Profile page if success, failure go to sign up page ===========================
     successRedirect : '/profile',
     failureRedirect : '/signup',
     failureFlash: true
@@ -60,16 +52,16 @@ router.post('/signup', passport.authenticate('local-signup', {
 //======================================================================================
 // GET profile page. ===================================================================
 //======================================================================================
-router.get('/profile', (req, res, next) => {
-   res.render('profile',
-       {
+router.get('/profile', isLoggedIn, (req, res, next) => {
+   res.render('profile', {
        title:"Profile Page",
        user: req.user,
-       avatar: gravatar.url(rea.user.email,{
+       avatar: gravatar.url(req.user.email,
+           {
            s:'100',
            r:'x',
            d:'retro'
-       },
+           },
        true)
        });
 });

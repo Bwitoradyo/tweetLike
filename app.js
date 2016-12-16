@@ -1,3 +1,7 @@
+//=============================================================================
+//Import Required Modules =====================================================
+//=============================================================================
+
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon')
@@ -10,7 +14,9 @@ var users = require('./server/routes/users');
 
 var app = express();
 
-//ODM With Mongoose
+//=============================================================================
+//ORM with Mongoose ===========================================================
+//=============================================================================
 var mongoose = require('mongoose');
 //Modules to store session
 var session = require ('express-session');
@@ -23,14 +29,28 @@ var flash = require ('connect-flash');
 app.set('views', path.join(__dirname, './server/views/pages'));
 app.set('view engine', 'ejs');
 
-//Database configuration
+//=============================================================================
+//Database configuration  =====================================================
+//=============================================================================
+
 var config = require('./server/config/config.js');
 //Connect to our database
 mongoose.connect(config.url);
+//Check if MongoDB is running
+mongoose.connection.on('error', () => {
+  console.error('MongoDB Connection Error. Make sure MongoDB is running.');
+});
 
+//Passport configuration
+require('./server/config/passport')(passport);
+
+//=============================================================================
+//Database configuration END  =================================================
+//=============================================================================
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'new-google-favicon-512.png')));
+
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -42,6 +62,40 @@ app.use(require('node-sass-middleware')({
   sourceMap: true
 }));
 app.use(express.static(path.join(__dirname, 'public')));
+
+
+//=============================================================================
+//Required for passport  ======================================================
+//Secret for session  =========================================================
+//=============================================================================
+
+app.use(session({
+  secret:'somerandomtextgohere',
+  saveUninitialized: true,
+  resave: true,
+  //store session on MongoDB using express-session + connect mongo
+  store: new MongoStore({
+    url: config.url,
+    collection: "sessions"
+  })
+}));
+
+//=============================================================================
+//Init passport authentication  ===============================================
+//=============================================================================
+app.use(passport.initialize());
+
+//=============================================================================
+//Persistent login sessions  ==================================================
+//=============================================================================
+app.use(passport.session());
+
+//=============================================================================
+//Setup flash as messaging middleware  ========================================
+//=============================================================================
+app.use(flash());
+
+
 
 app.use('/', routes);
 app.use('/users', users);

@@ -2,28 +2,28 @@
 //Import Required Modules =====================================================
 //=============================================================================
 
-var express = require('express');
-var path = require('path');
-var favicon = require('serve-favicon')
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
+let express = require('express');
+let path = require('path');
+let favicon = require('serve-favicon')
+let logger = require('morgan');
+let cookieParser = require('cookie-parser');
+let bodyParser = require('body-parser');
 
-var routes = require('./server/routes/index');
-var users = require('./server/routes/users');
+let routes = require('./server/routes/index');
+let users = require('./server/routes/users');
 
-var app = express();
+let app = express();
 
 //=============================================================================
 //ORM with Mongoose ===========================================================
 //=============================================================================
-var mongoose = require('mongoose');
+let mongoose = require('mongoose');
 //Modules to store session
-var session = require ('express-session');
-var MongoStore = require ('connect-mongo')(session);
+let session = require ('express-session');
+let MongoStore = require ('connect-mongo')(session);
 //Import Passport and Warning flash modules
-var passport = require ('passport');
-var flash = require ('connect-flash');
+let passport = require ('passport');
+let flash = require ('connect-flash');
 
 // view engine setup
 app.set('views', path.join(__dirname, './server/views/pages'));
@@ -33,7 +33,7 @@ app.set('view engine', 'ejs');
 //Database configuration  =====================================================
 //=============================================================================
 
-var config = require('./server/config/config.js');
+let config = require('./server/config/config.js');
 //Connect to our database
 mongoose.connect(config.url);
 //Check if MongoDB is running
@@ -100,14 +100,17 @@ app.use(flash());
 app.use('/', routes);
 app.use('/users', users);
 
-// catch 404 and forward to error handler
+//=============================================================================
+// catch 404 and forward to error handler =====================================
+//=============================================================================
 app.use((req, res, next) => {
-  var err = new Error('Not Found');
+  let err = new Error('Not Found');
   err.status = 404;
   next(err);
 });
-
-// error handler
+//=============================================================================
+// Don't leave them hanging, handle the error =================================
+//=============================================================================
 app.use((err, req, res, next) => {
   // set locals, only providing error in development
   res.locals.message = err.message;

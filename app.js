@@ -12,6 +12,12 @@ let bodyParser = require('body-parser');
 let routes = require('./server/routes/index');
 let users = require('./server/routes/users');
 
+//=============================================================================
+//Import the controllers ======================================================
+//=============================================================================
+let comments = require('./server/controllers/comments');
+
+
 let app = express();
 
 //=============================================================================
@@ -99,7 +105,11 @@ app.use(flash());
 
 app.use('/', routes);
 app.use('/users', users);
-
+//=============================================================================
+// Add the comments route =====================================================
+//=============================================================================
+app.get('/comments', comments.hasAuthorization, comments.list);
+app.get('/comments', comments.hasAuthorization,comments.create);
 //=============================================================================
 // catch 404 and forward to error handler =====================================
 //=============================================================================

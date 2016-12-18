@@ -5,7 +5,7 @@ let express = require('express');
 let router = express.Router();
 let passport = require ('passport');
 // get gravatar icon from email ========================================================
-let gravatar = require('gravatar')
+let gravatar = require('gravatar');
 
 //======================================================================================
 // GET home page. ======================================================================
@@ -18,16 +18,16 @@ router.get('/',(req, res, next) => {
 // GET login page. =====================================================================
 //======================================================================================
 router.get('/login', (req, res, next) => {
-  res.render('login', {title:"Login Page", message: req.flash('loginMessage')});
+res.render('login', {title:"Login Page", message: req.flash('loginMessage')});
 });
 
 //======================================================================================
-// POST login page. ====================================================================
+// POST login ==========================================================================
 //======================================================================================
 router.post('/login', passport.authenticate('local-login',{
-//Success go to Profile Page, Fail go to Sign up Page====================================
+//Success go to Profile Page, Fail go to Sign up Page  =================================
     successRedirect :'/profile',
-    failureRedirect :'/signup',
+    failureRedirect :'/login',
     failureFlash : true
 }));
 
@@ -43,7 +43,7 @@ router.get('/signup', (req, res) => {
 // POST Sign up ========================================================================
 //======================================================================================
 router.post('/signup', passport.authenticate('local-signup', {
-// Go to Profile page if success, failure go to sign up page ===========================
+// Success go to Profile Page, Fail go to Signup Page ==================================
     successRedirect : '/profile',
     failureRedirect : '/signup',
     failureFlash: true
@@ -69,7 +69,7 @@ router.get('/profile', isLoggedIn, (req, res, next) => {
 //======================================================================================
 // Check if user is logged in ==========================================================
 //======================================================================================
-isLoggedIn = (req, res, next) => {
+function isLoggedIn (req, res, next) {
     if (req.isAuthenticated())
         return next();
     res.redirect('/login');

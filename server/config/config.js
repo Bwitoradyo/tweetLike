@@ -2,6 +2,6 @@
 //SETUP THE DATABASE URL  =====================================================
 //=============================================================================
 module.exports = {
-    //connect with MongoDB
+//connect with MongoDB on localhost ===========================================
     'url': 'mongodb://localhost/tweetLike'
 };

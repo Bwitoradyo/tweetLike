@@ -25,26 +25,26 @@ module.exports = (passport) => {
             passwordField : 'password',
             passReqToCallback : true
         },
-        (req, email, password, done)=> {
+        (req, email, password, done) => {
             if (email)
 // format to lower-case ==========================================================
                 email = email.toLowerCase();
 // process asynchronous ==========================================================
             process.nextTick(() => {
                 User.findOne({ 'local.email' :  email },
-                    function(err, user)
+                    (err, user) =>
                     {
 // if errors =====================================================================
                         if (err)
                             return done(err);
-                        // check errors and bring the messages
+// check errors and bring the messages  ==========================================
                         if (!user)
                             return done(null, false, req.flash('loginMessage',
                                 'No user found.'));
                         if (!user.validPassword(password))
                             return done(null, false, req.flash('loginMessage',
                                 'Wohh! Wrong password.'));
-                        // everything ok, get user
+// everything ok, get user =======================================================
                         else
                             return done(null, user);
                     });
@@ -52,8 +52,7 @@ module.exports = (passport) => {
         }));
 // Signup local strategy ==========================================================
     passport.use('local-signup', new LocalStrategy({
-// change default username and password, to email and =============================
-//  password ======================================================================
+// change default username and password, to email and password  ===================
             usernameField : 'email',
             passwordField : 'password',
             passReqToCallback : true
@@ -85,9 +84,9 @@ module.exports = (passport) => {
                                 newUser.local.password =
                                     newUser.generateHash(password);
 // save data ======================================================================
-                                newUser.save((err)=> {
+                                newUser.save((err) => {
                                     if (err)
-                                        throw err;
+                                    throw err;
                                     return done(null, newUser);
                                 });
                             }

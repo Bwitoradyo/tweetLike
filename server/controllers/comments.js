@@ -12,7 +12,7 @@ let Comments = require ('../models/comments');
 exports.list = (req, res) => {
 // List all comments and sort by Date ============================================
     Comments.find().sort('-created').populate('user',
-    'local.email').exec ((error, comments){
+        'local.email').exec ((error, comments) => {
         if (error) {
             return res.send(400,{
                 message:error
@@ -34,13 +34,13 @@ exports.list = (req, res) => {
     });
 };
 //Create Comments ================================================================
-exports.create = (req, res)=>{
-//Create a new instance of the Comments model with regular body ==================
+exports.create = (req, res) => {
+//Create a new instance of the Comments model with request body ==================
     let comments = new Comments(req.body);
 //Set current user (id) ==========================================================
     comments.user = req.user;
 //Save the data received =========================================================
-    comments.save((error)=>{
+    comments.save((error) => {
        if (error){
            return res.send(400,{
               message: error
@@ -54,7 +54,7 @@ exports.create = (req, res)=>{
 //================================================================================
 // Comments authorization middleware =============================================
 //================================================================================
-exports.hasAuthorization = (req, res) => {
+exports.hasAuthorization = (req, res, next) => {
   if (req.isAuthenticated())
       return next();
   res.redirect('/login');

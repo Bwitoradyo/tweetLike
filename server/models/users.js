@@ -17,16 +17,16 @@ let userSchema = mongoose.Schema({
 });
 
 //================================================================================
-//Verify password is valid =======================================================
+//Encrypt the password here by generating Hash ===================================
 //================================================================================
-userSchema.methods.generateHash = (password) => {
+userSchema.methods.generateHash = function (password){
   return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
 };
 
 //================================================================================
-//Create the model for users and expose it to our app ============================
+//Verify if password is valid ====================================================
 //================================================================================
-userSchema.methods.validPassword = (password) => {
+userSchema.methods.validPassword = function (password)  {
     return bcrypt.compareSync(password, this.local.password);
 };
 

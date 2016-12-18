@@ -29,6 +29,11 @@ let MongoStore = require ('connect-mongo')(session);
 let passport = require ('passport');
 let flash = require ('connect-flash');
 
+
+
+//=============================================================================
+//Make sure that express is initiated =========================================
+//=============================================================================
 let app = express();
 
 // view engine setup  =========================================================
@@ -39,7 +44,8 @@ app.set('view engine', 'ejs');
 //Database configuration  =====================================================
 //=============================================================================
 
-let config = require('./server/config/config.js');
+//Get the mongoDB path from the config.js file ================================
+let config = require('./server/config/config');
 //Connect to our database =====================================================
 mongoose.connect(config.url);
 //Check if MongoDB is running =================================================
